@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Кирилл Мягков](https://up.htmlacademy.ru/nodejs-api-individual/2/user/2631699).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Наумов](https://htmlacademy.ru/profile/naumov_evg).
 
 ---
 
