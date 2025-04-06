@@ -5,14 +5,10 @@ import {
   OfferType,
   City,
   OfferFeature,
-  UserAvatarType,
   UserType,
 } from '../../types/index.js';
+import { doesSatisfyEnum } from '../../helpers/index.js';
 
-const tsvFlagsAdapter = {
-  Y: true,
-  N: false,
-};
 
 export class TSVFileReader implements FileReader {
   private rawData = '';
@@ -63,15 +59,15 @@ export class TSVFileReader implements FileReader {
           city: city as City,
           photoPreview,
           photos: photos.split(';'),
-          isPremium: tsvFlagsAdapter[isPremium as 'Y' | 'N'],
-          isFavorite: tsvFlagsAdapter[isFavorite as 'Y' | 'N'],
+          isPremium: isPremium === 'Y',
+          isFavorite: isFavorite === 'Y',
           type: type as OfferType,
           rating: Number.parseInt(rating, 10),
           roomsCount: Number.parseInt(roomsCount, 10),
           guestCount: Number.parseInt(guestCount, 10),
-          features: features.split(';') as OfferFeature[],
+          features: features.split(';').filter((feature) => doesSatisfyEnum(feature, OfferFeature)) as OfferFeature[],
           user: {
-            avatar: userAvatar as UserAvatarType,
+            avatar: userAvatar,
             email: userEmail,
             name: userName,
             password: userPassword,
@@ -79,8 +75,8 @@ export class TSVFileReader implements FileReader {
           },
           commentsCount: Number.parseInt(commentsCount, 10),
           coordinates: {
-            lat,
-            lon,
+            lat: Number.parseFloat(lat),
+            lon: Number.parseFloat(lon),
           },
           price: Number.parseInt(price, 10),
         };
