@@ -13,6 +13,7 @@ export type Offer = {
   isPremium: boolean,
   isFavorite: boolean,
   name: string,
+  description: string,
   photos: string[],
   photoPreview: string,
   postDate: Date,
