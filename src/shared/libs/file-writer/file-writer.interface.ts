@@ -1,3 +1,3 @@
 export interface FileWriter {
-  write(row: string): void;
+  write(row: string): Promise<void>;
 }
