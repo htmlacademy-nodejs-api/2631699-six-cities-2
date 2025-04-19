@@ -13,9 +13,10 @@ export class HelpCommand implements Command {
 
       Команды:
 
-      ${chalk.greenBright('--version')}:                   # выводит номер версии
-      ${chalk.greenBright('--help')}:                      # печатает этот текст
-      ${chalk.greenBright('--import <path>')}:             # импортирует данные из TSV
+      ${chalk.greenBright('--version')}:                                   # выводит номер версии
+      ${chalk.greenBright('--help')}:                                      # печатает этот текст
+      ${chalk.greenBright('--import <path>')}:                             # импортирует данные из TSV
+      ${chalk.greenBright('--generate <n> <filepath> <api>')}:             # генерирует тестовый TSV-файл
     `);
   }
 }
