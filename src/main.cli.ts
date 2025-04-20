@@ -4,17 +4,19 @@ import {
   HelpCommand,
   ImportCommand,
   VersionCommand,
+  GenerateCommand,
 } from './cli/index.js';
 
-function bootstrap() {
+async function bootstrap() {
   const cliApplication = new CLIApplication();
   cliApplication.registerCommands([
     new HelpCommand(),
     new VersionCommand(),
     new ImportCommand(),
+    new GenerateCommand(),
   ]);
 
-  cliApplication.processCommand(process.argv);
+  await cliApplication.processCommand(process.argv);
 }
 
-bootstrap();
+await bootstrap();
