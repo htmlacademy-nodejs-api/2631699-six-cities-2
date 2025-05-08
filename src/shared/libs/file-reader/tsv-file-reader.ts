@@ -35,7 +35,9 @@ export class TSVFileReader extends EventEmitter implements FileReader {
 
     for await (const line of lineGenerator) {
       importedRowCount++;
-      this.emit('line', line);
+      await new Promise((resolve) => {
+        this.emit('line', line, resolve);
+      });
     }
 
     this.emit('end', importedRowCount);
