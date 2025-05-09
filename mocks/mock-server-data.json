@@ -1,18 +1,18 @@
 {
   "api": {
     "names": [
-      "Name 1",
-      "Name 2",
-      "Name 3",
-      "Name 4",
-      "Name 5"
+      "Offer name 1",
+      "Offer name 2",
+      "Offer name 3",
+      "Offer name 4",
+      "Offer name 5"
     ],
     "descriptions": [
-      "Description 1",
-      "Description 2",
-      "Description 3",
-      "Description 4",
-      "Description 5"
+      "Offer description - 1",
+      "Offer description - 2",
+      "Offer description - 3",
+      "Offer description - 4",
+      "Offer description - 5"
     ],
     "cities": [
       "Amsterdam",
@@ -34,7 +34,14 @@
       "photo-2.jpg",
       "photo-3.jpg",
       "photo-4.jpg",
-      "photo-5.jpg"
+      "photo-5.jpg",
+      "photo-6.jpg",
+      "photo-7.jpg",
+      "photo-8.jpg",
+      "photo-9.jpg",
+      "photo-10.jpg",
+      "photo-11.jpg",
+      "photo-12.jpg"
     ],
     "types": [
       "apartment",
