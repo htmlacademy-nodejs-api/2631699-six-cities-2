@@ -30,6 +30,8 @@ const LAST_WEEK_DAY = 7;
 const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 50;
 
+const OFFER_PHOTOS_COUNT = 6;
+
 export class TSVOfferGenerator implements OfferGenerator {
   constructor(private readonly mockData: MockServerData) {}
 
@@ -41,7 +43,7 @@ export class TSVOfferGenerator implements OfferGenerator {
       .toISOString();
     const city = getRandomItem<string>(this.mockData.cities);
     const photoPreview = getRandomItem<string>(this.mockData.photoPreviews);
-    const photos = getRandomItems<string>(this.mockData.photos).join(';');
+    const photos = [...new Array(OFFER_PHOTOS_COUNT)].map(() => getRandomItem<string>(this.mockData.photos)).join(';');
     const isPremium = getRandomItem<string>(['Y', 'N']);
     const isFavorite = getRandomItem<string>(['Y', 'N']);
     const type = getRandomItem<OfferType>(this.mockData.types);
