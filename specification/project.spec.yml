@@ -1,0 +1,641 @@
+openapi: 3.0.0
+
+info:
+  title: API сервер для проекта «Шесть городов».
+  description: |-
+    * Список ресурсов и маршрутов сервера «Шесть городов».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+
+tags:
+  - name: users
+    description: Действия с пользователем.
+  - name: offers
+    description: Действия с предложениями.
+  - name: comments
+    description: Действия с комментариями.
+  - name: favorites
+    description: Действия с избранными предложениями.
+
+security:
+  - jwtAuth: []
+
+paths:
+  /offers:
+    post:
+      tags: [ offers ]
+      summary: Создать новое предложение
+      description: Создает новое предложение
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+      responses:
+        201:
+          description: Предложение создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offerResponse'
+        400:
+          description: Неверные данные
+        401:
+          description: Не авторизован
+        422:
+          description: Ошибка валидации
+
+    get:
+      tags: [ offers ]
+      summary: Получить список предложений
+      description: Возвращает список предложений
+      parameters:
+        - name: limit
+          in: query
+          description: Лимит предложений (по умолчанию 60)
+          schema:
+            type: number
+            default: 60
+      security: []
+      responses:
+        200:
+          description: Список предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offerResponseShort'
+
+  /offers/{offerId}:
+    get:
+      tags: [ offers ]
+      summary: Получить детальную информацию о предложении
+      description: Возвращает полную информацию о предложении
+      security: []
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Детальная информация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offerResponse'
+        404:
+          description: Предложение не найдено
+
+    patch:
+      tags: [ offers ]
+      summary: Обновить предложение
+      description: Редактирует существующее предложение полностью или частично
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: '#/components/schemas/createOffer'
+                - type: object
+                  properties:
+                    id:
+                      type: string
+                      required: true
+                      example: "jkdj2j31n2"
+
+      responses:
+        200:
+          description: Предложение обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offerResponse'
+        400:
+          description: Неверные данные
+        401:
+          description: Не авторизован
+        404:
+          description: Предложение не найдено
+
+    delete:
+      tags: [ offers ]
+      summary: Удалить предложение
+      description: Удаляет предложение
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Предложение удалено
+        401:
+          description: Не авторизован
+        404:
+          description: Предложение не найдено
+
+  /offers/premium/{city}:
+    get:
+      tags: [ offers ]
+      summary: Получить премиальные предложения
+      description: Возвращает 3 премиальных предложения для указанного города
+      parameters:
+        - name: city
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [ Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf ]
+      responses:
+        200:
+          description: Список премиальных предложений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offerResponseShort'
+        400:
+          description: Неверное название города
+
+  /comments/{offerId}:
+    get:
+      tags: [ comments ]
+      summary: Получить комментарии по предложению
+      description: Возвращает до 50 последних комментариев к предложению
+      security: []
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Список комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+        404:
+          description: Предложение не найдено
+
+    post:
+      tags: [ comments ]
+      summary: Добавить комментарий
+      description: Добавляет новый комментарий к предложению
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+      responses:
+        201:
+          description: Комментарий добавлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        400:
+          description: Некорректный запрос
+        401:
+          description: Не авторизован
+        404:
+          description: Предложение не найдено
+        422:
+          description: Ошибка валидации
+
+  /users/register:
+    post:
+      security: []
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+      responses:
+        201:
+          description: Пользователь зарегистрирован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResponse'
+
+        400:
+          description: Некорректный запрос.
+        403:
+          description: Регистрация доступна только неавторизованным пользователям.
+        409:
+          description: Пользователь с таким email уже существует.
+        422:
+          description: Данные пользователя не проходят валидацию.
+        500:
+          description: Ошибка сервера.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+      security: []
+      requestBody:
+        description: Информация для авторизации пользователя.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [email, password]
+        required: true
+      responses:
+        200:
+          description: Авторизация успешна.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        400:
+          description: Некорректный запрос.
+        401:
+          description: Неверные учетные данные или пользователь не существует.
+        500:
+          description: Ошибка сервера.
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+      responses:
+        200:
+          description: Пользователь авторизован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userResponse'
+        401:
+          description: Пользователь не авторизован.
+        500:
+          description: Ошибка сервера.
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Выход из закрытой части приложения
+      description: Завершает пользовательский сеанс
+      responses:
+        204:
+          description: Успешный выход.
+        401:
+          description: Пользователь не авторизован.
+        500:
+          description: Ошибка сервера.
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузить изображение аватара
+      description: Загружает изображение аватара пользователя. Изображение
+        аватара должно быть в формате `png` или `jpg`.
+      parameters:
+        - name: userId
+          in: path
+          description: id пользователя
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Информация для загрузки аватара пользователя.
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Файл изображения (`png` или `jpg` до 5 MB)
+              required: [ file ]
+        required: true
+      responses:
+        200:
+          description: Файл успешно загружен.
+        400:
+          description: Неверный формат файла.
+        500:
+          description: Ошибка сервера.
+
+  /favorites:
+    get:
+      tags:
+        - favorites
+      summary: Получить список избранных предложений
+      description: Возвращает все предложения, добавленные в избранное текущим пользователем.
+      responses:
+        200:
+          description: Успешный запрос. Возвращает список избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offerResponse'
+        401:
+          description: Пользователь не авторизован.
+        500:
+          description: Ошибка сервера.
+
+  /favorites/{offerId}:
+    post:
+      tags:
+        - favorites
+      summary: Добавить предложение в избранное
+      description: Добавляет предложение с указанным id в список избранных.
+      parameters:
+        - name: offerId
+          in: path
+          description: id предложения
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Предложение успешно добавлено в избранное.
+        400:
+          description: Некорректный id предложения.
+        401:
+          description: Пользователь не авторизован.
+        404:
+          description: Предложение не найдено.
+        500:
+          description: Ошибка сервера.
+
+    delete:
+      tags:
+        - favorites
+      summary: Удалить предложение из избранного
+      description: Удаляет предложение с указанным id из списка избранных.
+      parameters:
+        - name: offerId
+          in: path
+          description: id предложения
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Предложение успешно удалено из избранного.
+        400:
+          description: Некорректный id предложения.
+        401:
+          description: Пользователь не авторизован.
+        404:
+          description: Предложение не найдено в избранном.
+        500:
+          description: Ошибка сервера.
+
+
+components:
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    createOffer:
+      type: object
+      properties:
+        city:
+          type: string
+          enum: [ Amsterdam, Brussels, Cologne, Dusseldorf, Hamburg, Paris ]
+          required: true
+        coordinates:
+          type: object
+          required: true
+          properties:
+            lat:
+              type: number
+              example: 55.7522
+            lon:
+              type: number
+              example: 37.6156
+        features:
+          type: array
+          required: true
+          items:
+            type: string
+            enum: [ AirConditioning, BabySeat, Breakfast, Fridge, LaptopFriendlyWorkspace, Washer ]
+        guestCount:
+          type: number
+          example: 2
+          required: true
+        isPremium:
+          type: boolean
+          example: true
+          required: true
+        isFavorite:
+          type: boolean
+          example: false
+          required: true
+        name:
+          type: string
+          example: "Бунгало в Амстердаме"
+          required: true
+        description:
+          type: string
+          example: "Описание бунгало в Амстердаме"
+          required: true
+        photos:
+          type: array
+          required: true
+          items:
+            type: string
+            format: uri
+          example: [ "img/photo-1.jpg", "img/photo-2.jpg", "img/photo-3.jpg", "img/photo-4.jpg", "img/photo-5.jpg", "img/photo-6.jpg" ]
+        photoPreview:
+          required: true
+          type: string
+          format: uri
+          example: "img/photo-preview.jpg"
+        price:
+          type: number
+          example: 4000
+          required: true
+        roomsCount:
+          type: number
+          example: 2
+          required: true
+        type:
+          type: string
+          enum: [ apartment, house, room, hotel ]
+          required: true
+      required: [city, coordinates, features, guestCount, isPremium, isFavorite, name, description, photos, photoPreview, roomsCount, price, type]
+
+    offerResponse:
+      allOf:
+        - $ref: '#/components/schemas/createOffer'
+        - type: object
+          properties:
+            id:
+              type: string
+              example: "djaksjdk123"
+            commentsCount:
+              type: number
+              example: 10
+            rating:
+              type: number
+              example: 5
+            postDate:
+              type: string
+              format: date-time
+            user:
+              $ref: '#/components/schemas/userResponse'
+
+    offerResponseShort:
+      type: object
+      properties:
+        price:
+          type: number
+          example: 4000
+        name:
+          type: string
+          example: "Бунгало в Амстердаме"
+        type:
+          type: string
+          enum: [ apartment, house, room, hotel ]
+        isFavorite:
+          type: boolean
+          example: false
+          required: true
+        postDate:
+          type: string
+          format: date-time
+        city:
+          type: string
+          enum: [ Amsterdam, Brussels, Cologne, Dusseldorf, Hamburg, Paris ]
+        photoPreview:
+          type: string
+          format: uri
+          example: "img/photo-preview.jpg"
+        isPremium:
+          type: boolean
+          example: true
+        commentsCount:
+          type: number
+          example: 10
+        rating:
+          type: number
+          example: 5
+
+    createUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: User
+          minLength: 1
+          maxLength: 15
+          required: true
+        email:
+          type: string
+          format: email
+          example: user@test.ru
+          required: true
+        password:
+          type: string
+          minLength: 6
+          maxLength: 12
+          example: 123456
+          required: true
+        type:
+          type: string
+          enum: [обычный, pro]
+          default: обычный
+          example: обычный
+          required: true
+      required: [name, email, password, type]
+
+    userResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+        name:
+          type: string
+          example: User
+        email:
+          type: string
+          example: user@test.ru
+        type:
+          type: string
+          example: обычный
+
+    comment:
+      type: object
+      properties:
+        id:
+          type: string
+        comment:
+          type: string
+        date:
+          type: string
+          format: date-time
+        rating:
+          type: number
+        user:
+          $ref: '#/components/schemas/userResponse'
+
+    createComment:
+      type: object
+      properties:
+        comment:
+          type: string
+          minLength: 5
+          maxLength: 1024
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+      required:
+        - comment
+        - rating
