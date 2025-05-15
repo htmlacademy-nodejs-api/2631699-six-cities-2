@@ -6,7 +6,7 @@ import {
   getMongoURI,
 } from '../../shared/helpers/index.js';
 import { Offer } from '../../shared/types/index.js';
-import { UserService } from '../../shared/modules/user/user-service.interface.js';
+import { UserService } from '../../shared/modules/user/index.js';
 import {
   DefaultOfferService,
   OfferModel,
@@ -16,8 +16,10 @@ import {
   DatabaseClient,
   MongoDatabaseClient,
 } from '../../shared/libs/database-client/index.js';
-import { Logger } from '../../shared/libs/logger/index.js';
-import { ConsoleLogger } from '../../shared/libs/logger/console.logger.js';
+import {
+  Logger,
+  ConsoleLogger,
+} from '../../shared/libs/logger/index.js';
 import {
   DefaultUserService,
   UserModel,
