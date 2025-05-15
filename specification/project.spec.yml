@@ -152,7 +152,8 @@ paths:
     get:
       tags: [ offers ]
       summary: Получить премиальные предложения
-      description: Возвращает 3 премиальных предложения для указанного города
+      description: Возвращает 3 премиальных предложения для указанного города]
+      security: []
       parameters:
         - name: city
           in: path
@@ -328,20 +329,13 @@ paths:
         500:
           description: Ошибка сервера.
 
-  /users/{userId}/avatar:
+  /users/avatar:
     post:
       tags:
         - users
       summary: Загрузить изображение аватара
       description: Загружает изображение аватара пользователя. Изображение
         аватара должно быть в формате `png` или `jpg`.
-      parameters:
-        - name: userId
-          in: path
-          description: id пользователя
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Информация для загрузки аватара пользователя.
         content:
