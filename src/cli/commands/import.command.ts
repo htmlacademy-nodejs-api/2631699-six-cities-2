@@ -66,21 +66,18 @@ export class ImportCommand implements Command {
     await this.offerService.create({
       name: offer.name,
       description: offer.description,
-      postDate: offer.postDate,
       city: offer.city,
       photoPreview: offer.photoPreview,
       photos: offer.photos,
       isPremium: offer.isPremium,
       isFavorite: offer.isFavorite,
-      rating: offer.rating,
       type: offer.type,
       roomsCount: offer.roomsCount,
       guestCount: offer.guestCount,
       price: offer.price,
       features: offer.features,
-      userId: user.id,
       coordinates: offer.coordinates,
-    });
+    }, user.id);
   }
 
   public getName(): string {

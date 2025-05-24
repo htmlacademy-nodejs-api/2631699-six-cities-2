@@ -24,10 +24,6 @@ const OfferConfig = {
   photos: {
     count: 6,
   },
-  rating: {
-    min: 1,
-    max: 5,
-  },
   roomsCount: {
     min: 1,
     max: 8,
@@ -77,14 +73,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public description!: string;
 
-  @prop({ required: true })
-  public postDate!: Date;
-
-  @prop({
-    required: true,
-    type: () => String,
-    enum: City,
-  })
   public city!: City;
 
   @prop({ required: true })
@@ -105,14 +93,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({ required: true })
   public isFavorite!: boolean;
-
-  @prop({
-    required: true,
-    validate: {
-      validator: (value: number) => value >= OfferConfig.rating.min && value <= OfferConfig.rating.max,
-    },
-  })
-  public rating!: number;
 
   @prop({
     required: true,

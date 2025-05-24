@@ -7,7 +7,7 @@ import {
 import { City } from '../../types/index.js';
 
 export interface OfferService {
-  create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
+  create(dto: CreateOfferDto, userId: string): Promise<DocumentType<OfferEntity>>;
   find(): Promise<DocumentType<OfferEntity>[]> | null;
   findPremiumInCity(city: City): Promise<DocumentType<OfferEntity>[]> | null;
   findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
