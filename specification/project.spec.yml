@@ -16,8 +16,6 @@ tags:
     description: Действия с предложениями.
   - name: comments
     description: Действия с комментариями.
-  - name: favorites
-    description: Действия с избранными предложениями.
 
 security:
   - jwtAuth: []
@@ -357,10 +355,10 @@ paths:
         500:
           description: Ошибка сервера.
 
-  /favorites:
+  /offers/favorites:
     get:
       tags:
-        - favorites
+        - offers
       summary: Получить список избранных предложений
       description: Возвращает все предложения, добавленные в избранное текущим пользователем.
       responses:
@@ -377,10 +375,10 @@ paths:
         500:
           description: Ошибка сервера.
 
-  /favorites/{offerId}:
+  /offers/favorites/{offerId}:
     post:
       tags:
-        - favorites
+        - offers
       summary: Добавить предложение в избранное
       description: Добавляет предложение с указанным id в список избранных.
       parameters:
@@ -404,7 +402,7 @@ paths:
 
     delete:
       tags:
-        - favorites
+        - offers
       summary: Удалить предложение из избранного
       description: Удаляет предложение с указанным id из списка избранных.
       parameters:
