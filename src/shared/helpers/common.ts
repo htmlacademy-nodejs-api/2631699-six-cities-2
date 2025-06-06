@@ -1,3 +1,8 @@
+import {
+  ClassConstructor,
+  plainToInstance,
+} from 'class-transformer';
+
 export function doesSatisfyEnum<E extends object>(value: unknown, target: E): boolean {
   return new Set(Object.values(target)).has(value);
 }
@@ -17,4 +22,14 @@ export function getRandomItem<T>(items: T[]):T {
 
 export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '';
+}
+
+export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
+  return plainToInstance(someDto, plainObject, { excludeExtraneousValues: true });
+}
+
+export function createErrorObject(message: string) {
+  return {
+    error: message,
+  };
 }
