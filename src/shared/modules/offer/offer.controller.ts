@@ -17,7 +17,7 @@ import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 import { OfferService } from './offer-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
-import { OfferRdo, ShortOfferRdo } from './rdo/index.js';
+import { DetailedOfferRdo, OfferRdo } from './rdo/index.js';
 import { CreateOfferDto, UpdateOfferDto } from './dto/index.js';
 import { ParamOfferId } from './type/param-offerId.type.js';
 import { ParamCityId } from './type/param-city.type.js';
@@ -53,18 +53,8 @@ export class OfferController extends BaseController {
     { body }: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
     response: Response
   ): Promise<void> {
-    const offerExist = await this.offerService.findByName(body.name);
-
-    if (offerExist) {
-      throw new HttpError(
-        StatusCodes.UNPROCESSABLE_ENTITY,
-        `Offer with name «${body.name}» exists.`,
-        'OfferController'
-      );
-    }
-
     const result = await this.offerService.create(body, 'user_id');
-    this.created(response, fillDTO(OfferRdo, result));
+    this.created(response, fillDTO(DetailedOfferRdo, result));
   }
 
   public async getDetail(
@@ -82,7 +72,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    this.ok(response, fillDTO(OfferRdo, offer));
+    this.ok(response, fillDTO(DetailedOfferRdo, offer));
   }
 
   public async update(
@@ -101,7 +91,7 @@ export class OfferController extends BaseController {
     }
 
     const result = await this.offerService.updateById(offerId, body);
-    this.ok(response, fillDTO(OfferRdo, result));
+    this.ok(response, fillDTO(DetailedOfferRdo, result));
   }
 
   public async delete(
@@ -158,7 +148,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    this.ok(response, fillDTO(ShortOfferRdo, offers));
+    this.ok(response, fillDTO(OfferRdo, offers));
   }
 
   public async getFavorites(
@@ -207,5 +197,4 @@ export class OfferController extends BaseController {
     await this.offerService.removeFromFavorites(offerId);
     this.ok(response);
   }
-
 }

@@ -1,20 +1,12 @@
 import { Expose } from 'class-transformer';
 import {
   City,
-  Coordinates,
-  OfferFeature,
   OfferType,
 } from '../../../types/index.js';
 
 export class OfferRdo {
   @Expose()
-  public id: string;
-
-  @Expose()
   public name: string;
-
-  @Expose()
-  public description: string;
 
   @Expose()
   public isFavorite: boolean;
@@ -29,29 +21,17 @@ export class OfferRdo {
   public city: City;
 
   @Expose()
-  public postDate: Date;
+  public createdAt: Date;
 
   @Expose()
   public photoPreview: string;
 
   @Expose()
-  public photos: string[];
-
-  @Expose()
-  public commentsCount: number;
-
-  @Expose()
-  public roomsCount: number;
-
-  @Expose()
-  public guestCount: number;
+  public commentCount: number;
 
   @Expose()
   public price: number;
 
   @Expose()
-  public features: OfferFeature[];
-
-  @Expose()
-  public coordinates: Coordinates;
+  public rating: number | undefined;
 }
