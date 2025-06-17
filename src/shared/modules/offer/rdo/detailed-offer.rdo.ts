@@ -6,7 +6,7 @@ import {
   OfferType,
 } from '../../../types/index.js';
 
-export class OfferRdo {
+export class DetailedOfferRdo {
   @Expose()
   public id: string;
 

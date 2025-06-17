@@ -1,10 +1,7 @@
 import { Expose } from 'class-transformer';
-import {
-  City,
-  OfferType,
-} from '../../../types/index.js';
+import { City, OfferType } from '../types/index.js';
 
-export class ShortOfferRdo {
+export class OfferRdo {
   @Expose()
   public name: string;
 
@@ -21,12 +18,17 @@ export class ShortOfferRdo {
   public city: City;
 
   @Expose()
-  public postDate: Date;
+  public createdAt: Date;
 
   @Expose()
   public photoPreview: string;
 
   @Expose()
+  public commentCount: number;
 
-  public commentsCount: number;
+  @Expose()
+  public price: number;
+
+  @Expose()
+  public rating: number | undefined;
 }
