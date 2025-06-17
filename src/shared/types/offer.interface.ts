@@ -16,7 +16,6 @@ export type Offer = {
   description: string,
   photos: string[],
   photoPreview: string,
-  postDate: Date,
   price: number,
   rating: number,
   roomsCount: number,
