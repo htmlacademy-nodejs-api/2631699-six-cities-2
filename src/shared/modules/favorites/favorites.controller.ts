@@ -41,7 +41,7 @@ export class FavoritesController extends BaseController {
     _request: Request,
     response: Response,
   ): Promise<void> {
-    const offers = await this.favoritesService.find('user_id');
+    const offers = await this.favoritesService.find('685a799b02f35881181febfd');
     this.ok(response, fillDTO(OfferRdo, offers));
   }
 
@@ -50,7 +50,7 @@ export class FavoritesController extends BaseController {
     response: Response
   ): Promise<void> {
     const { offerId } = params;
-    const offerExist = await this.offerService.findById(offerId);
+    const offerExist = await this.offerService.findById('685a799b02f35881181febfd', offerId);
 
     if (!offerExist) {
       throw new HttpError(
@@ -60,7 +60,7 @@ export class FavoritesController extends BaseController {
       );
     }
 
-    await this.favoritesService.add(offerId, 'user_id');
+    await this.favoritesService.add(offerId, '685a799b02f35881181febfd');
     this.ok(response);
   }
 
@@ -70,7 +70,7 @@ export class FavoritesController extends BaseController {
   ): Promise<void> {
     const { offerId } = params;
 
-    await this.favoritesService.delete(offerId, 'user_id');
+    await this.favoritesService.delete(offerId, '685a799b02f35881181febfd');
     this.ok(response);
   }
 }

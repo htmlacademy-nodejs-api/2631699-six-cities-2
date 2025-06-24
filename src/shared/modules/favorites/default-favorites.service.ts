@@ -17,7 +17,6 @@ import { OfferEntity } from '../offer/index.js';
 export class DefaultFavoritesService implements FavoritesService {
   constructor(
     @inject(Component.FavoritesModel) private readonly favoritesModel: types.ModelType<FavoritesEntity>,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
   ) {}
 
   async find(userId: string): Promise<DocumentType<OfferEntity>[] | null> {
@@ -37,6 +36,11 @@ export class DefaultFavoritesService implements FavoritesService {
                   ]
                 }
               }
+            },
+            {
+              $addFields: {
+                isFavorite: true,
+              }
             }
           ],
           as: 'offers',
@@ -47,34 +51,18 @@ export class DefaultFavoritesService implements FavoritesService {
   }
 
   public async add(offerId: string, userId: string): Promise<DocumentType<FavoritesEntity>> {
-    const result = await Promise.all([
-      this.offerModel.updateOne(
-        { _id: offerId },
-        { $set: { isFavorite: true } }
-      ),
-      this.favoritesModel.findOneAndUpdate(
-        { _id: userId },
-        { $addToSet: { offers: offerId } },
-        { upsert: true, new: true }
-      )
-    ]);
-
-    return result[1];
+    return this.favoritesModel.findOneAndUpdate(
+      { _id: userId },
+      { $addToSet: { offers: offerId } },
+      { upsert: true, new: true }
+    );
   }
 
   public async delete(offerId: string, userId: string): Promise<DocumentType<FavoritesEntity> | null> {
-    const result = await Promise.all([
-      this.offerModel.updateOne(
-        { _id: offerId },
-        { $set: { isFavorite: false } }
-      ),
-      this.favoritesModel.findOneAndUpdate(
-        { _id: userId },
-        { $pull: { offers: offerId } },
-        { new: true },
-      ),
-    ]);
-
-    return result[1];
+    return this.favoritesModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { offers: offerId } },
+      { new: true },
+    );
   }
 }

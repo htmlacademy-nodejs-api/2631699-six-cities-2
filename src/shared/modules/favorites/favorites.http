@@ -1,20 +1,20 @@
 # Избранное
 ## Получить список избранных предложений
-GET http://localhost:3001/favorites_ HTTP/1.1
+GET http://localhost:3001/_favorites HTTP/1.1
 Content-Type: application/json
 
 ###
 
 ## Добавить в избранное
 
-POST http://localhost:3001/favorites/6832306ac6fc75df64405e81 HTTP/1.1
+POST http://localhost:3001/_favorites/685a799b02f35881181febff HTTP/1.1
 Content-Type: application/json
 
 ###
 
 ## Удалить из избранного
 
-POST http://localhost:3001/favorites/6832306ac6fc75df64405e81 HTTP/1.1
+DELETE http://localhost:3001/favorites/685a799b02f35881181febff HTTP/1.1
 Content-Type: application/json
 
 ###

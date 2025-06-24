@@ -43,7 +43,7 @@ export class OfferController extends BaseController {
   }
 
   public async index(_request: Request, response: Response): Promise<void> {
-    const offers = await this.offerService.find();
+    const offers = await this.offerService.find('685a799b02f35881181febfd');
     this.ok(response, fillDTO(OfferRdo, offers));
   }
 
@@ -51,7 +51,7 @@ export class OfferController extends BaseController {
     { body }: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
     response: Response
   ): Promise<void> {
-    const result = await this.offerService.create(body, 'user_id');
+    const result = await this.offerService.create(body, '685a799b02f35881181febfd');
     this.created(response, fillDTO(DetailedOfferRdo, result));
   }
 
@@ -60,7 +60,7 @@ export class OfferController extends BaseController {
     response: Response
   ): Promise<void> {
     const { offerId } = params;
-    const offer = await this.offerService.findById(offerId);
+    const offer = await this.offerService.findById('685a799b02f35881181febfd', offerId);
 
     if (!offer) {
       throw new HttpError(
@@ -78,7 +78,7 @@ export class OfferController extends BaseController {
     response: Response,
   ): Promise<void> {
     const { offerId } = params;
-    const offerExist = await this.offerService.findById(offerId);
+    const offerExist = await this.offerService.findById('685a799b02f35881181febfd', offerId);
 
     if (!offerExist) {
       throw new HttpError(
@@ -88,7 +88,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    const result = await this.offerService.updateById(offerId, body);
+    const result = await this.offerService.updateById('685a799b02f35881181febfd', offerId, body);
     this.ok(response, fillDTO(DetailedOfferRdo, result));
   }
 
@@ -97,7 +97,7 @@ export class OfferController extends BaseController {
     response: Response,
   ): Promise<void> {
     const { offerId } = params;
-    const offerExist = await this.offerService.findById(offerId);
+    const offerExist = await this.offerService.findById('685a799b02f35881181febfd', offerId);
 
     if (!offerExist) {
       throw new HttpError(
@@ -107,7 +107,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    const result = await this.offerService.updateById(offerId, body);
+    const result = await this.offerService.updateById('685a799b02f35881181febfd', offerId, body);
 
     if (result) {
       this.noContent(response);
@@ -136,7 +136,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    const offers = await this.offerService.findPremiumInCity(city);
+    const offers = await this.offerService.findPremiumInCity('685a799b02f35881181febfd', city);
 
     if (!offers) {
       throw new HttpError(
