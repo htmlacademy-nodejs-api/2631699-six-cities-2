@@ -609,9 +609,9 @@ components:
       properties:
         id:
           type: string
-        comment:
+        text:
           type: string
-        date:
+        postDate:
           type: string
           format: date-time
         rating:
@@ -622,7 +622,7 @@ components:
     createComment:
       type: object
       properties:
-        comment:
+        text:
           type: string
           minLength: 5
           maxLength: 1024
