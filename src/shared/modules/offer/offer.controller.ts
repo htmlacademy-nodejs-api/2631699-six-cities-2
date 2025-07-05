@@ -12,6 +12,9 @@ import {
   BaseController,
   HttpMethod,
   HttpError,
+  ValidateObjectIdMiddleware,
+  ValidateDtoMiddleware,
+  DocumentExistsMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -19,7 +22,10 @@ import { OfferService } from './offer-service.interface.js';
 import { fillDTO } from '../../helpers/index.js';
 import { DetailedOfferRdo } from './rdo/index.js';
 import { OfferRdo } from '../../rdo/offer.rdo.js';
-import { CreateOfferDto, UpdateOfferDto } from './dto/index.js';
+import {
+  CreateOfferDto,
+  UpdateOfferDto,
+} from './dto/index.js';
 import { ParamOfferId } from '../../types/param-offerId.type.js';
 import { ParamCityId } from './type/param-city.type.js';
 import { City } from '../../types/index.js';
@@ -35,10 +41,41 @@ export class OfferController extends BaseController {
     this.logger.info('Register routes for OfferController…');
 
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Get, handler: this.getDetail });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Patch, handler: this.update });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.delete });
+    this.addRoute(
+      {
+        path: '/',
+        method: HttpMethod.Post,
+        handler: this.create,
+        middlewares: [new ValidateDtoMiddleware(CreateOfferDto)],
+      });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.getDetail,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
     this.addRoute({ path: '/premium/:city', method: HttpMethod.Get, handler: this.getPremium });
   }
 
@@ -61,15 +98,6 @@ export class OfferController extends BaseController {
   ): Promise<void> {
     const { offerId } = params;
     const offer = await this.offerService.findById('685a799b02f35881181febfd', offerId);
-
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with ID ${offerId} not found`,
-        'OfferController'
-      );
-    }
-
     this.ok(response, fillDTO(DetailedOfferRdo, offer));
   }
 
@@ -78,16 +106,6 @@ export class OfferController extends BaseController {
     response: Response,
   ): Promise<void> {
     const { offerId } = params;
-    const offerExist = await this.offerService.findById('685a799b02f35881181febfd', offerId);
-
-    if (!offerExist) {
-      throw new HttpError(
-        StatusCodes.UNPROCESSABLE_ENTITY,
-        `Offer with id «${offerId}» not found.`,
-        'OfferController'
-      );
-    }
-
     const result = await this.offerService.updateById('685a799b02f35881181febfd', offerId, body);
     this.ok(response, fillDTO(DetailedOfferRdo, result));
   }
@@ -97,16 +115,6 @@ export class OfferController extends BaseController {
     response: Response,
   ): Promise<void> {
     const { offerId } = params;
-    const offerExist = await this.offerService.findById('685a799b02f35881181febfd', offerId);
-
-    if (!offerExist) {
-      throw new HttpError(
-        StatusCodes.UNPROCESSABLE_ENTITY,
-        `Offer with id «${offerId}» not found.`,
-        'OfferController'
-      );
-    }
-
     const result = await this.offerService.updateById('685a799b02f35881181febfd', offerId, body);
 
     if (result) {
@@ -137,15 +145,6 @@ export class OfferController extends BaseController {
     }
 
     const offers = await this.offerService.findPremiumInCity('685a799b02f35881181febfd', city);
-
-    if (!offers) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Premium offers not found in ${city}`,
-        'OfferController'
-      );
-    }
-
     this.ok(response, fillDTO(OfferRdo, offers));
   }
 }

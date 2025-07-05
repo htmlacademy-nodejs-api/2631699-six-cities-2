@@ -33,3 +33,9 @@ export function createErrorObject(message: string) {
     error: message,
   };
 }
+
+export function enumToString<T extends Record<string, string | number>>(enumObj: T): string {
+  return Object.values(enumObj)
+    .filter((value) => typeof value === 'string' || typeof value === 'number')
+    .join(', ');
+}

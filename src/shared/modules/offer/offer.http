@@ -10,7 +10,7 @@ POST http://localhost:3001/offers HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Тестовое предложение",
+  "name": "1",
   "description": "Описание предложения",
   "city": "Paris",
   "photoPreview": "img-preview.jpg",
