@@ -5,12 +5,13 @@ import {
   Length,
   IsString,
   IsBoolean,
-  MinLength,
   IsInt,
   Min,
   Max,
   IsObject,
   ValidateNested,
+  ArrayMinSize,
+  ArrayMaxSize,
 } from 'class-validator';
 import {
   OfferType,
@@ -43,17 +44,21 @@ export class CreateOfferDto {
   public photoPreview: string;
 
   @IsArray({ message: OfferValidationConfig.photos.invalidType.message })
-  @Length(
+  @ArrayMinSize(
     OfferValidationConfig.photos.length.value,
+    { message: OfferValidationConfig.photos.length.message },
+  )
+  @ArrayMaxSize(
     OfferValidationConfig.photos.length.value,
-    { message: OfferValidationConfig.photos.length.message })
+    { message: OfferValidationConfig.photos.length.message },
+  )
   @IsString({ each: true, message: OfferValidationConfig.photos.invalidFormat.message })
   public photos: string[];
 
   @IsBoolean({ message: OfferValidationConfig.isPremium.invalid.message })
   public isPremium: boolean;
 
-  @IsEnum(City, { message: OfferValidationConfig.type.invalid.message })
+  @IsEnum(OfferType, { message: OfferValidationConfig.type.invalid.message })
   public type: OfferType;
 
   @IsInt({ message: OfferValidationConfig.roomsCount.invalidFormat.message })
@@ -90,11 +95,11 @@ export class CreateOfferDto {
   public price: number;
 
   @IsArray({ message: OfferValidationConfig.features.invalidType.message })
-  @IsEnum(OfferFeature, { each: true, message: OfferValidationConfig.features.invalidFormat.message })
-  @MinLength(
+  @ArrayMinSize(
     OfferValidationConfig.features.minLength.value,
     { message: OfferValidationConfig.features.minLength.message },
   )
+  @IsEnum(OfferFeature, { each: true, message: OfferValidationConfig.features.invalidFormat.message })
   public features: OfferFeature[];
 
   @IsObject({ message: OfferValidationConfig.coordinates.invalidFormat.message })

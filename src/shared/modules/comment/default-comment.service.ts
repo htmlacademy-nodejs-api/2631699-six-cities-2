@@ -23,7 +23,6 @@ export class DefaultCommentService implements CommentService {
       userId,
       offerId,
     });
-    console.log('userId:', userId);
 
     await this.commentModel
       .aggregate([

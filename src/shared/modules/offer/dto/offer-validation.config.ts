@@ -1,5 +1,9 @@
 import { enumToString } from '../../../helpers/index.js';
-import { City, OfferType } from '../../../types/index.js';
+import {
+  City,
+  OfferFeature,
+  OfferType,
+} from '../../../types/index.js';
 
 const OFFER_NAME_MIN_LENGTH = 10;
 const OFFER_NAME_MAX_LENGTH = 100;
@@ -102,7 +106,7 @@ export const OfferValidationConfig = {
   },
   features: {
     invalidFormat: {
-      message: `Features must be one or more of ${enumToString(OfferType)}`,
+      message: `Features must be one or more of ${enumToString(OfferFeature)}`,
     },
     invalidType: {
       message: 'Features field must be an array',
