@@ -131,4 +131,9 @@ export class DefaultOfferService implements OfferService {
       return result;
     });
   }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.offerModel
+      .exists({_id: new Types.ObjectId(documentId)})) !== null;
+  }
 }

@@ -23,6 +23,9 @@ import { UserRdo } from './rdo/user.rdo.js';
 import { LoginUserRequest } from './login-user-request.type.js';
 import { UserEntity } from './user.entity.js';
 import { LoginUserRdo } from './rdo/login-user.rdo.js';
+import { ValidateDtoMiddleware } from '../../libs/rest/index.js';
+import { CreateUserDto } from './dto/index.js';
+import { LoginUserDto } from './dto/login-user.dto.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -34,9 +37,19 @@ export class UserController extends BaseController {
     super(logger);
     this.logger.info('Register routes for UserController…');
 
-    this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)],
+    });
     this.addRoute({ path: '/login', method: HttpMethod.Get, handler: this.checkAuth });
-    this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login,
+      middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
+    });
     this.addRoute({ path: '/logout', method: HttpMethod.Post, handler: this.logout });
     this.addRoute({ path: '/avatar', method: HttpMethod.Post, handler: this.loadAvatar });
   }
