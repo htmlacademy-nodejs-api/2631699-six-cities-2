@@ -1,3 +1,3 @@
 export class UpdateUserDto {
-  public avatarPath?: string;
+  public avatar?: string;
 }

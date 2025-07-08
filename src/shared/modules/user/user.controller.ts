@@ -2,13 +2,18 @@ import {
   inject,
   injectable,
 } from 'inversify';
-import { Request, Response } from 'express';
+import {
+  Request,
+  Response,
+} from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import {
   BaseController,
   HttpMethod,
   HttpError,
+  ValidateDtoMiddleware,
+  UploadFileMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -23,7 +28,6 @@ import { UserRdo } from './rdo/user.rdo.js';
 import { LoginUserRequest } from './login-user-request.type.js';
 import { UserEntity } from './user.entity.js';
 import { LoginUserRdo } from './rdo/login-user.rdo.js';
-import { ValidateDtoMiddleware } from '../../libs/rest/index.js';
 import { CreateUserDto } from './dto/index.js';
 import { LoginUserDto } from './dto/login-user.dto.js';
 
@@ -51,7 +55,14 @@ export class UserController extends BaseController {
       middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
     });
     this.addRoute({ path: '/logout', method: HttpMethod.Post, handler: this.logout });
-    this.addRoute({ path: '/avatar', method: HttpMethod.Post, handler: this.loadAvatar });
+    this.addRoute({
+      path: '/avatar',
+      method: HttpMethod.Post,
+      handler: this.loadAvatar,
+      middlewares: [
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+      ]
+    });
   }
 
   private async getUser(email: string): Promise<UserEntity | null> {
@@ -128,19 +139,20 @@ export class UserController extends BaseController {
   }
 
   public async loadAvatar(
-    { body }: Request,
+    req: Request,
     res: Response,
   ): Promise<void> {
-    const user = await this.getUser(body.email);
+    const userId = '686c2a367a7503d0c362bca7';
 
-    if (!user) {
+    if (!userId) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found.`,
+        'User is not logged in',
         'UserController',
       );
     }
 
+    await this.userService.updateById(userId, { avatar: req?.file?.filename });
     this.ok(res);
   }
 }
