@@ -10,7 +10,9 @@ import {
 import {
   BaseController,
   HttpMethod,
-  ValidateObjectIdMiddleware, DocumentExistsMiddleware,
+  ValidateObjectIdMiddleware,
+  DocumentExistsMiddleware,
+  PrivateRouteMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -31,12 +33,20 @@ export class FavoritesController extends BaseController {
 
     this.logger.info('Register routes for FavoritesController…');
 
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.getFavorites });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Get,
+      handler: this.getFavorites,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
+    });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.addToFavorites,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
@@ -45,34 +55,42 @@ export class FavoritesController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.removeFromFavorites,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+      ],
     });
   }
 
   public async getFavorites(
-    _request: Request,
+    { tokenPayload }: Request,
     response: Response,
   ): Promise<void> {
-    const offers = await this.favoritesService.find('685a799b02f35881181febfd');
+    const offers = await this.favoritesService.find(tokenPayload.id);
     this.ok(response, fillDTO(OfferRdo, offers));
   }
 
   public async addToFavorites(
-    { params }: Request<ParamOfferId>,
+    {
+      params,
+      tokenPayload,
+    }: Request<ParamOfferId>,
     response: Response
   ): Promise<void> {
     const { offerId } = params;
-    await this.favoritesService.add(offerId, '685a799b02f35881181febfd');
+    await this.favoritesService.add(offerId, tokenPayload.id);
     this.ok(response);
   }
 
   public async removeFromFavorites(
-    { params }: Request<ParamOfferId>,
+    {
+      params,
+      tokenPayload,
+    }: Request<ParamOfferId>,
     response: Response
   ): Promise<void> {
     const { offerId } = params;
-
-    await this.favoritesService.delete(offerId, '685a799b02f35881181febfd');
+    await this.favoritesService.delete(offerId, tokenPayload.id);
     this.ok(response);
   }
 }

@@ -18,6 +18,7 @@ import {
   Controller,
   ExceptionFilter,
 } from '../shared/libs/rest/index.js';
+import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/index.js';
 
 @injectable()
 export class RestApplication {
@@ -30,6 +31,7 @@ export class RestApplication {
     @inject(Component.FavoritesController) private readonly favoritesController: Controller,
     @inject(Component.ExceptionFilter) private readonly appExceptionFilter: ExceptionFilter,
     @inject(Component.CommentController) private readonly commentController: Controller,
+    @inject(Component.AuthExceptionFilter) private readonly authExceptionFilter: ExceptionFilter,
   ) {
     this.server = express();
   }
@@ -56,11 +58,14 @@ export class RestApplication {
   }
 
   private async initMiddleware(): Promise<void> {
+    const authMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
+
     this.server.use(express.json());
     this.server.use(
       '/upload',
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
+    this.server.use(authMiddleware.execute.bind(authMiddleware));
   }
 
   private async initServer(): Promise<void> {
@@ -69,6 +74,7 @@ export class RestApplication {
   }
 
   private async initExceptionFilters(): Promise<void> {
+    this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 
