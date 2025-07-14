@@ -16,4 +16,5 @@ export interface OfferService extends DocumentExists {
   deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   updateById(userId: string, offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
   exists(documentId: string): Promise<boolean>;
+  isOfferOwner(offerId: string, userId: string): Promise<boolean>;
 }

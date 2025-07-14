@@ -133,7 +133,16 @@ export class DefaultOfferService implements OfferService {
   }
 
   public async exists(documentId: string): Promise<boolean> {
-    return (await this.offerModel
-      .exists({_id: new Types.ObjectId(documentId)})) !== null;
+    return (await this.offerModel.exists({_id: new Types.ObjectId(documentId)})) !== null;
+  }
+
+  public async isOfferOwner(offerId: string, userId: string): Promise<boolean> {
+    const offer = await this.offerModel.findById(offerId);
+
+    if (!offerId) {
+      return false;
+    }
+
+    return userId === offer?.userId?._id?.toString();
   }
 }

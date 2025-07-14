@@ -512,7 +512,7 @@ components:
             id:
               type: string
               example: "djaksjdk123"
-            commentsCount:
+            commentCount:
               type: number
               example: 10
             rating:
@@ -553,7 +553,7 @@ components:
         isPremium:
           type: boolean
           example: true
-        commentsCount:
+        commentCount:
           type: number
           example: 10
         rating:

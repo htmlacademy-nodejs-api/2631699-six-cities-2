@@ -1,11 +1,13 @@
-import { Expose } from 'class-transformer';
+import {
+  Expose,
+  Type,
+} from 'class-transformer';
 import {
   City,
-  Coordinates,
   OfferFeature,
   OfferType,
 } from '../../../types/index.js';
-
+import { CoordinatesRdo } from './coordinates.rdo.js';
 export class DetailedOfferRdo {
   @Expose()
   public id: string;
@@ -38,7 +40,7 @@ export class DetailedOfferRdo {
   public photos: string[];
 
   @Expose()
-  public commentsCount: number;
+  public commentCount: number;
 
   @Expose()
   public roomsCount: number;
@@ -53,5 +55,6 @@ export class DetailedOfferRdo {
   public features: OfferFeature[];
 
   @Expose()
-  public coordinates: Coordinates;
+  @Type(() => CoordinatesRdo)
+  public coordinates: CoordinatesRdo;
 }

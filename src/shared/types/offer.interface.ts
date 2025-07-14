@@ -6,7 +6,7 @@ import { Coordinates } from './coordinates.type.js';
 
 export type Offer = {
   city: City,
-  commentsCount: number,
+  commentCount: number,
   coordinates: Coordinates,
   features: OfferFeature[],
   guestCount: number,

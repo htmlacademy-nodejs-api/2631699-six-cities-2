@@ -48,7 +48,7 @@ export function createOffer(offerData: string): Offer {
       password: userPassword,
       type: userType as UserType,
     },
-    commentsCount: 0,
+    commentCount: 0,
     coordinates: {
       lat: Number.parseFloat(lat),
       lon: Number.parseFloat(lon),

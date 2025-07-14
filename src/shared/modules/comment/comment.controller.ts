@@ -7,7 +7,9 @@ import {
   BaseController,
   HttpMethod,
   ValidateObjectIdMiddleware,
-  ValidateDtoMiddleware, DocumentExistsMiddleware,
+  ValidateDtoMiddleware,
+  DocumentExistsMiddleware,
+  PrivateRouteMiddleware,
 } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
@@ -34,6 +36,7 @@ export default class CommentController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
         new ValidateDtoMiddleware(CreateCommentDto),
@@ -60,12 +63,15 @@ export default class CommentController extends BaseController {
   }
 
   public async create(
-    { body, params }: CreateCommentRequest,
+    {
+      body,
+      params,
+      tokenPayload,
+    }: CreateCommentRequest,
     res: Response
   ): Promise<void> {
     const { offerId } = params;
-    const userId = '685a799b02f35881181febfd';
-    const comment = await this.commentService.create(userId, offerId, body);
+    const comment = await this.commentService.create(tokenPayload.id, offerId, body);
     this.created(res, fillDTO(CommentRdo, comment));
   }
 }
