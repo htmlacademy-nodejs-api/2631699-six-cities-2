@@ -129,20 +129,37 @@ export class OfferController extends BaseController {
     response: Response,
   ): Promise<void> {
     const { offerId } = params;
+
+    if (! await this.offerService.isOfferOwner(offerId, tokenPayload.id)) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        `Can't edit offer with id «${offerId}».`,
+        'OfferController'
+      );
+    }
+
     const result = await this.offerService.updateById(tokenPayload.id, offerId, body);
     this.ok(response, fillDTO(DetailedOfferRdo, result));
   }
 
   public async delete(
     {
-      body,
       params,
       tokenPayload,
     }: Request<ParamOfferId>,
     response: Response,
   ): Promise<void> {
     const { offerId } = params;
-    const result = await this.offerService.updateById(tokenPayload.id, offerId, body);
+
+    if (! await this.offerService.isOfferOwner(offerId, tokenPayload.id)) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        `Can't delete offer with id «${offerId}».`,
+        'OfferController'
+      );
+    }
+
+    const result = await this.offerService.deleteById(tokenPayload.id, offerId);
 
     if (result) {
       this.noContent(response);
