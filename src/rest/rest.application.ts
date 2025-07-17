@@ -5,6 +5,7 @@ import {
 import express, {
   Express,
 } from 'express';
+import cors from 'cors';
 
 import { Logger } from '../shared/libs/logger/index.js';
 import {
@@ -66,6 +67,7 @@ export class RestApplication {
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
     this.server.use(authMiddleware.execute.bind(authMiddleware));
+    this.server.use(cors());
   }
 
   private async initServer(): Promise<void> {
