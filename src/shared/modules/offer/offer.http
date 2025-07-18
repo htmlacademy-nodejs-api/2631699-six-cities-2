@@ -8,15 +8,15 @@ Content-Type: application/json
 ## Добавить новое предложение
 POST http://localhost:3001/offers HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImVtYWlsQHVzZXIzLmNvbSIsIm5hbWUiOiJ1c2VybmFtZSIsImlkIjoiNjg3MzhiYjljYmU5MTQ3YWE5ZWNmZTAzIiwiaWF0IjoxNzUyNDkxMzAwLCJleHAiOjE3NTI0OTQ5MDB9.PcWjJXeEJCiCOS5al8tZTKCCSlLFZrBuZQq8hMkgeI0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAdXNlci50ZXN0IiwibmFtZSI6IlRlc3QgVXNlciIsImlkIjoiNjg3YTRmNzQzZjQ5MmMxY2JiODkzMTQ5IiwiaWF0IjoxNzUyODUzODA5LCJleHAiOjE3NTI4NTc0MDl9.jcPbGZ_68-acKpWDk4oNJnOj7YFQUtQGTx2k5BovkHw
 
 {
-  "name": "Название предложения",
+  "name": "Тестовое премиум предложение",
   "description": "Подробное описание предложения",
   "city": "Paris",
   "photoPreview": "img-preview.jpg",
   "photos": ["img1.jpg", "img2.jpg", "img1.jpg", "img2.jpg", "img1.jpg", "img2.jpg"],
-  "isPremium": false,
+  "isPremium": true,
   "type": "apartment",
   "roomsCount": 2,
   "guestCount": 4,
@@ -30,11 +30,35 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImVtYWlsQHVzZXIzLmNvbSIsI
 
 ###
 
-## Обновить предложение
-PATCH http://localhost:3001/offers/686c2a441b1b6c06f036e7ca HTTP/1.1
+##
+
+## Получить детальную информацию по предложению
+GET http://localhost:3001/offers/687a50523f492c1cbb89314d HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImVtYWlsQHVzZXIzLmNvbSIsIm5hbWUiOiJ1c2VybmFtZSIsImlkIjoiNjg3MzhiYjljYmU5MTQ3YWE5ZWNmZTAzIiwiaWF0IjoxNzUyNDkzODQ3LCJleHAiOjE3NTI0OTc0NDd9.vEjTdnc4aUu4a-jiL-mHodFeuIJueqIs-ff4Xzqhuw4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAdXNlci50ZXN0IiwibmFtZSI6IlRlc3QgVXNlciIsImlkIjoiNjg3YTRmNzQzZjQ5MmMxY2JiODkzMTQ5IiwiaWF0IjoxNzUyODUzODA5LCJleHAiOjE3NTI4NTc0MDl9.jcPbGZ_68-acKpWDk4oNJnOj7YFQUtQGTx2k5BovkHw
+
+###
+
+## Обновить предложение
+PATCH http://localhost:3001/offers/687a50523f492c1cbb89314d HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAdXNlci50ZXN0IiwibmFtZSI6IlRlc3QgVXNlciIsImlkIjoiNjg3YTRmNzQzZjQ5MmMxY2JiODkzMTQ5IiwiaWF0IjoxNzUyODUzODA5LCJleHAiOjE3NTI4NTc0MDl9.jcPbGZ_68-acKpWDk4oNJnOj7YFQUtQGTx2k5BovkHw
 
 {
-  "name": "Новое название"
+  "description": "Обновленное описание предложения"
 }
+
+###
+
+## Получить премиальные предложения в городе
+GET http://localhost:3001/offers/premium/moscow HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Удалить предложение
+DELETE http://localhost:3001/offers/687a6d56d6f673e7cbad7391 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAdXNlci50ZXN0IiwibmFtZSI6IlRlc3QgVXNlciIsImlkIjoiNjg3YTRmNzQzZjQ5MmMxY2JiODkzMTQ5IiwiaWF0IjoxNzUyODUxOTI4LCJleHAiOjE3NTI4NTU1Mjh9.T0rybbELAuVrQxIf9K4Y-kXzMfsCF8X5lMw_HYM1T-4
+
+###

@@ -5,12 +5,22 @@ POST http://localhost:3001/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "username",
-  "email": "email@user3.com",
-  "password": "123456",
+  "name": "Test User",
+  "email": "test@user.test",
+  "password": "111111",
   "avatar": "avatar.jpg",
   "type": "pro"
 }
+
+###
+
+## Проверить статус авторизации пользователя
+
+GET http://localhost:3001/users/login HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAdXNlci50ZXN0IiwibmFtZSI6IlRlc3QgVXNlciIsImlkIjoiNjg3YTRmNzQzZjQ5MmMxY2JiODkzMTQ5IiwiaWF0IjoxNzUyODQ2MzA3LCJleHAiOjE3NTI4NDk5MDd9.DvI2wD6Y3f770I68jrMOn7IwL8H4Q7NsY3BKmTi9Qr8
+
+###
 
 ###
 
@@ -20,8 +30,8 @@ POST http://localhost:3001/users/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "email@user3.com",
-  "password": "123456"
+  "email": "test@user.test",
+  "password": "111111"
 }
 
 ###
