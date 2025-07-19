@@ -20,7 +20,10 @@ import {
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
 import { OfferService } from './offer-service.interface.js';
-import { fillDTO } from '../../helpers/index.js';
+import {
+  fillDTO,
+  capitalize,
+} from '../../helpers/index.js';
 import { DetailedOfferRdo } from './rdo/index.js';
 import { OfferRdo } from '../../rdo/offer.rdo.js';
 import {
@@ -159,7 +162,7 @@ export class OfferController extends BaseController {
       );
     }
 
-    const result = await this.offerService.deleteById(tokenPayload.id, offerId);
+    const result = await this.offerService.deleteById(offerId);
 
     if (result) {
       this.noContent(response);
@@ -179,8 +182,9 @@ export class OfferController extends BaseController {
     }: Request<ParamCityId>,
     response: Response
   ): Promise<void> {
-    const city = Object.values(City).includes(params.city as City)
-      ? params.city as City
+    const cityParam = capitalize(params?.city);
+    const city = Object.values(City).includes(cityParam as City)
+      ? cityParam as City
       : null;
 
     if (!city) {

@@ -39,3 +39,8 @@ export function enumToString<T extends Record<string, string | number>>(enumObj:
     .filter((value) => typeof value === 'string' || typeof value === 'number')
     .join(', ');
 }
+
+
+export function capitalize(string: string): string {
+  return string[0].toUpperCase() + string.slice(1);
+}
